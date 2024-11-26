@@ -1,0 +1,5 @@
+*env/
+*.pyc
+__pucache__/
+.idea/
+db.sqlite3
