@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 
 author = {
 	"Имя": "Иван",
@@ -8,6 +8,14 @@ author = {
 	"телефон": "8-923-600-01-02",
 	"email": "vasya@mail.ru"
 }
+
+items = [
+   {"id": 1, "name": "Кроссовки abibas" ,"quantity":5},
+   {"id": 2, "name": "Куртка кожаная" ,"quantity":2},
+   {"id": 5, "name": "Coca-cola 1 литр" ,"quantity":12},
+   {"id": 7, "name": "Картофель фри" ,"quantity":0},
+   {"id": 8, "name": "Кепка" ,"quantity":124},
+]
 
 # Create your views here.
 def home(request):
@@ -27,3 +35,13 @@ def about(request):
 		Email: <b>{author['email']}</b><br>
 	"""
 	return HttpResponse(text)
+
+def get_item(request, item_id:int):
+	"""Функция по item_id нужного элемента вернет имя и кол-во."""
+	for item in items:
+		if item["id"] == item_id:
+			result = f"""
+				<h2>Имя: {item['name']}</h2>
+				<p>Количество: {item['quantity']}</p>
+			"""
+			return HttpResponse(result)
