@@ -45,3 +45,6 @@ def get_item(request, item_id:int):
 				<p>Количество: {item['quantity']}</p>
 			"""
 			return HttpResponse(result)
+
+	# Если элемент не найден - нужно вернуть соответствующий ответ (response)
+	return HttpResponseNotFound(f"Item with id={item_id} not found")
