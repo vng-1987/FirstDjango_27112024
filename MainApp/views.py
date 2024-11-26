@@ -48,3 +48,12 @@ def get_item(request, item_id:int):
 
 	# Если элемент не найден - нужно вернуть соответствующий ответ (response)
 	return HttpResponseNotFound(f"Item with id={item_id} not found")
+
+def get_items(request):
+	result = "<h1>Список товаров</h1><ol>"
+	for item in items:
+		result += f"""
+			<li><a href="/item/{item['id']}">{item['name']}</a></li>
+		"""
+	result += "</ol>"
+	return HttpResponse(result)
