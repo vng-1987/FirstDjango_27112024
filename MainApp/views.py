@@ -1,13 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound
-
-items = [
-   {"id": 1, "name": "Кроссовки abibas" ,"quantity":5},
-   {"id": 2, "name": "Куртка кожаная" ,"quantity":2},
-   {"id": 5, "name": "Coca-cola 1 литр" ,"quantity":12},
-   {"id": 7, "name": "Картофель фри" ,"quantity":0},
-   {"id": 8, "name": "Кепка" ,"quantity":124},
-]
+from MainApp.models import Item
 
 # Create your views here.
 def home(request):
@@ -40,19 +33,17 @@ def about(request):
    return HttpResponse(text)
 
 def get_item(request, item_id:int):
-	"""Функция по item_id нужного элемента вернет имя и кол-во."""
+	items = Item.objects.values()
 	for item in items:
 		if item["id"] == item_id:
 			context = {'item':item}
 			return render(request, 'item_page.html', context)
 
 	# Если элемент не найден - нужно вернуть соответствующий ответ (response)
-	return HttpResponseNotFound(f"Item with id={item_id} not found")
+	return render(request, "errors.html", {'error': f"Item with id={item_id} not found."})
 
 
 def get_items(request):
-	context = {
-		'items': items
-	}
-	print(context)
-	return render(request, 'items_list.html', context)
+   items = Item.objects.all()
+   context = {'items': items}
+   return render(request, 'items_list.html', context)
