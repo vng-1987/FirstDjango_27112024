@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound
 from MainApp.models import Item
 
+# Нужный тип исключения для функции get_item()
+from django.core.exceptions import ObjectDoesNotExist
+
 # Create your views here.
 def home(request):
 	context = {
@@ -32,16 +35,16 @@ def about(request):
   """
    return HttpResponse(text)
 
-def get_item(request, item_id:int):
-	items = Item.objects.values()
-	for item in items:
-		if item["id"] == item_id:
-			context = {'item':item}
-			return render(request, 'item_page.html', context)
-
-	# Если элемент не найден - нужно вернуть соответствующий ответ (response)
-	return render(request, "errors.html", {'error': f"Item with id={item_id} not found."})
-
+def get_item(request, item_id: int):
+	#""" Функция по item_id нужного элемента вернет имя и количество. """
+   try:
+      item = Item.objects.get(id=item_id)
+   except ObjectDoesNotExist:
+      # Если элемент не найден - нужно вернуть соответствующий ответ (response)
+      return render(request, "errors.html", {'error': f"Item with id={item_id} not found."})
+   else:
+      context = {'item':item}
+      return render(request, 'item_page.html', context)
 
 def get_items(request):
    items = Item.objects.all()
